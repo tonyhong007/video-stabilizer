@@ -1,0 +1,23 @@
+load("@python_deps//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_binary (
+    name = "video_stabilizer",
+    srcs = ["video_stabilizer.py"],
+    deps = [
+        #"//video_stabilizer_server:server",
+        #"//video_stabilizer_proto:video_stabilizer_proto",
+        requirement("grpcio")
+    ]
+)
+
+py_test (
+    name = "video_stabilizer_test",
+    srcs = ["video_stabilizer_test.py"],
+    deps = [
+        "//video_stabilizer:stabilizer",
+        "//video_stabilizer_proto:video_stabilizer_proto",
+        requirement(""),
+    ]
+)

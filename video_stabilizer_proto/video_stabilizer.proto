@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package unary;
+
+service VideoStabilizer {
+ rpc Stabilize(StabilizeRequest) returns (StabilizeResponse) {}
+}
+
+message StabilizeRequest {
+ bytes frame_image = 1;
+ bytes prev_frame = 2;
+ TODO features = 3;
+ TODO trajectory = 4;
+ int padding = 5;
+ TODO transforms = 6;
+ int frame_index = 7;
+}
+
+message StabilizeResponse {
+ bytes stabilized_frame_image = 1;
+ TODO features = 2;
+ TODO trajectory = 3;
+ TODO transforms = 4;
+}
+
+service Flow {
+ rpc Flow(FlowRequest) returns (FlowResponse) {}
+}
+
+message FlowRequest {
+ bytes prev_frame = 1;
+ bytes frame_image = 2;
+ TODO features = 3;
+}
+
+message FlowResponse {
+ TODO transform = 1;
+ TODO features = 2;
+}
+
+service CumSum {
+ rpc CumSum(CumSumRequest) returns (CumSumResponse) {}
+}
+
+message CumSumRequest {
+ TODO trajectory_element = 1;
+ TODO transform = 2;
+}
+
+message CumSumResponse {
+ TODO sum = 1;
+}
