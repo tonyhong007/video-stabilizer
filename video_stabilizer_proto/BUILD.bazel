@@ -1,5 +1,6 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
 proto_library(
     name = "video_stabilizer_proto",
     srcs = ["video_stabilizer.proto"],
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
 )
