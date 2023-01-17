@@ -1,4 +1,2 @@
-grpcio
-grpcio-tools
 opencv-python-headless
 numpy
