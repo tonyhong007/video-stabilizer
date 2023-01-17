@@ -13,6 +13,7 @@ grpc_deps()
 
 load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
 
+grpc_extra_deps()
 
 http_archive(
     name = "rules_python",
@@ -30,19 +31,11 @@ python_register_toolchains(
 
 load("@python3_10//:defs.bzl", "interpreter")
 
-# load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@rules_python//python:pip.bzl", "pip_install")
 
-# compile_pip_requirements(
-#     name = "requirements",
-# )
-
-load("@rules_python//python:pip.bzl", "pip_parse")
-
-pip_parse(
-   name = "python_deps",
-   requirements_lock = "//third_party:requirements.txt",
+pip_install(
+    name = "python_deps",
+    python_interpreter_target = interpreter,
+    requirements = "//third_party:requirements.txt",
 )
-
-load("@python_deps//:requirements.bzl", "install_deps")
-install_deps()
 
