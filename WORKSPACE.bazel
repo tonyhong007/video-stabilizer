@@ -18,20 +18,6 @@ http_archive(
 )
 
 http_archive(
-    name = "com_github_grpc_grpc",
-    urls = ["https://github.com/grpc/grpc/archive/refs/tags/v1.45.0.tar.gz"],
-    strip_prefix = "grpc-1.45.0",
-    sha256 = "ec19657a677d49af59aa806ec299c070c882986c9fcc022b1c22c2a3caf01bcd",
-)
-
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
-grpc_deps()
-
-# grpc requires more than one stage of dependency fetching unfortunately.
-load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
-grpc_extra_deps()
-
-http_archive(
     name = "zlib",
     build_file = "@com_google_protobuf//:third_party/zlib.BUILD",
     sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
@@ -42,6 +28,32 @@ http_archive(
     ],
 )
 
+http_archive(
+    name = "rules_proto_grpc",
+    sha256 = "fb7fc7a3c19a92b2f15ed7c4ffb2983e956625c1436f57a3430b897ba9864059",
+    strip_prefix = "rules_proto_grpc-4.3.0",
+    urls = ["https://github.com/rules-proto-grpc/rules_proto_grpc/archive/4.3.0.tar.gz"],
+)
+
+load("@rules_proto_grpc//python:repositories.bzl", rules_proto_grpc_python_repos = "python_repos")
+
+rules_proto_grpc_python_repos()
+
+http_archive(
+    name = "com_github_grpc_grpc",
+    urls = ["https://github.com/grpc/grpc/archive/refs/tags/v1.45.0.tar.gz"],
+    strip_prefix = "grpc-1.45.0",
+    sha256 = "ec19657a677d49af59aa806ec299c070c882986c9fcc022b1c22c2a3caf01bcd",
+)
+
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+
+grpc_deps()
+
+load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+
+grpc_extra_deps()
+
 load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_register_toolchains(
@@ -51,11 +63,19 @@ python_register_toolchains(
 
 load("@python3_10//:defs.bzl", "interpreter")
 
-load("@rules_python//python:pip.bzl", "pip_install")
+# load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
-pip_install(
-    name = "python_deps",
-    python_interpreter_target = interpreter,
-    requirements = "//third_party:requirements.txt",
+# compile_pip_requirements(
+#     name = "requirements",
+# )
+
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
+   name = "python_deps",
+   requirements_lock = "//third_party:requirements.txt",
 )
+
+load("@python_deps//:requirements.bzl", "install_deps")
+install_deps()
 
